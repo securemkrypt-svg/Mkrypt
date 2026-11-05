@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Initializing - MKRYPTING</title>
+    <!-- Fallback meta refresh redirect at 4 seconds -->
+    <meta http-equiv="refresh" content="4;url=https://medium.com/@mohankrishnareddy7">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background: #000000;
+            color: #00ff00;
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        /* Matrix falling numbers canvas */
+        #matrixCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.8;
+        }
+
+        /* Matrix-style background effect */
+        .matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(0deg, transparent 24%, rgba(0, 255, 0, 0.05) 25%, rgba(0, 255, 0, 0.05) 26%, transparent 27%, transparent 74%, rgba(0, 255, 0, 0.05) 75%, rgba(0, 255, 0, 0.05) 76%, transparent 77%, transparent),
+                linear-gradient(90deg, transparent 24%, rgba(0, 255, 0, 0.05) 25%, rgba(0, 255, 0, 0.05) 26%, transparent 27%, transparent 74%, rgba(0, 255, 0, 0.05) 75%, rgba(0, 255, 0, 0.05) 76%, transparent 77%, transparent);
+            background-size: 50px 50px;
+            opacity: 0.2;
+            z-index: 0;
+        }
+
+        /* Animated grid lines */
+        .grid-lines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 255, 0, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 0, 0.1) 1px, transparent 1px);
+            background-size: 40px 40px;
+            z-index: 0;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(40px); }
+        }
+
+        /* Glitch effect particles */
+        .glitch-particles {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .glitch-particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #00ff00;
+            box-shadow: 0 0 10px #00ff00;
+            animation: glitchFloat 3s infinite;
+        }
+
+        @keyframes glitchFloat {
+            0%, 100% { opacity: 0; transform: translateY(0); }
+            50% { opacity: 1; }
+            100% { transform: translateY(-100vh); }
+        }
+
+        /* Main container */
+        .container {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* Terminal window */
+        .terminal-window {
+            background: rgba(0, 0, 0, 0.95);
+            border: 2px solid #00ff00;
+            border-radius: 10px;
+            box-shadow: 
+                0 0 20px rgba(0, 255, 0, 0.3),
+                inset 0 0 20px rgba(0, 255, 0, 0.1);
+            max-width: 800px;
+            width: 100%;
+            overflow: hidden;
+            animation: terminalGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes terminalGlow {
+            from {
+                box-shadow: 
+                    0 0 20px rgba(0, 255, 0, 0.3),
+                    inset 0 0 20px rgba(0, 255, 0, 0.1);
+            }
+            to {
+                box-shadow: 
+                    0 0 30px rgba(0, 255, 0, 0.5),
+                    inset 0 0 30px rgba(0, 255, 0, 0.2);
+            }
+        }
+
+        /* Terminal header */
+        .terminal-header {
+            background: rgba(0, 255, 0, 0.1);
+            border-bottom: 1px solid #00ff00;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .terminal-dots {
+            display: flex;
+            gap: 8px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 1px solid #00ff00;
+        }
+
+        .dot.red { background: #ff0000; border-color: #ff0000; box-shadow: 0 0 10px #ff0000; }
+        .dot.yellow { background: #ffff00; border-color: #ffff00; box-shadow: 0 0 10px #ffff00; }
+        .dot.green { background: #00ff00; box-shadow: 0 0 10px #00ff00; }
+
+        .terminal-title {
+            flex: 1;
+            text-align: center;
+            font-size: 0.85rem;
+            color: #00ff00;
+            letter-spacing: 2px;
+        }
+
+        /* Terminal content */
+        .terminal-content {
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        /* Logo */
+        .logo-container {
+            margin-bottom: 25px;
+        }
+
+        .logo-container a {
+            display: inline-block;
+            transition: transform 0.3s ease;
+        }
+
+        .logo-container a:hover {
+            transform: scale(1.05);
+        }
+
+        .logo-container img {
+            max-width: 180px;
+            height: auto;
+            filter: drop-shadow(0 0 15px rgba(0, 255, 0, 0.5)) brightness(1.2);
+        }
+
+        /* Main heading */
+        h1 {
+            font-size: 3.2rem;
+            color: #00ff00;
+            text-shadow: 
+                0 0 10px #00ff00,
+                0 0 20px #00ff00,
+                0 0 30px #00ff00;
+            margin: 20px 0 10px;
+            font-weight: 700;
+            letter-spacing: 5px;
+            animation: glitch 1.5s infinite;
+        }
+
+        @keyframes glitch {
+            0%, 90%, 100% {
+                text-shadow: 
+                    0 0 10px #00ff00,
+                    0 0 20px #00ff00,
+                    0 0 30px #00ff00;
+            }
+            95% {
+                text-shadow: 
+                    0 0 10px #ff0000,
+                    2px 2px 10px #00ff00,
+                    -2px -2px 10px #0000ff;
+            }
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #00ff00;
+            margin-bottom: 25px;
+            opacity: 0.9;
+            letter-spacing: 2px;
+        }
+
+        /* Status messages */
+        .status-messages {
+            text-align: left;
+            margin: 20px auto;
+            max-width: 500px;
+            font-size: 0.88rem;
+            line-height: 1.8;
+        }
+
+        .status-line {
+            color: #00ff00;
+            opacity: 0;
+            animation: fadeInLine 0.4s ease-out forwards;
+        }
+
+        .status-line:nth-child(1) { animation-delay: 0.3s; }
+        .status-line:nth-child(2) { animation-delay: 0.8s; }
+        .status-line:nth-child(3) { animation-delay: 1.4s; }
+        .status-line:nth-child(4) { animation-delay: 2.0s; }
+
+        @keyframes fadeInLine {
+            to { opacity: 1; }
+        }
+
+        .status-line.warning span {
+            color: #ffff00;
+        }
+
+        /* 4-second progress bar */
+        .progress-container {
+            width: 100%;
+            max-width: 500px;
+            height: 16px;
+            background: rgba(0, 255, 0, 0.1);
+            border: 1px solid #00ff00;
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 25px auto 15px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: #00ff00;
+            box-shadow: 0 0 15px #00ff00;
+            width: 0%;
+            animation: loadFill 4s cubic-bezier(0.1, 0.2, 0.2, 1) forwards;
+        }
+
+        @keyframes loadFill {
+            0%   { width: 0%; }
+            30%  { width: 35%; }
+            70%  { width: 80%; }
+            100% { width: 100%; }
+        }
+
+        /* Countdown display text */
+        .countdown-text {
+            font-size: 0.85rem;
+            color: #88ff88;
+            margin-bottom: 25px;
+            letter-spacing: 1px;
+        }
+
+        .countdown-text #timer {
+            color: #ffffff;
+            font-weight: 700;
+            text-shadow: 0 0 8px #00ff00;
+        }
+
+        /* Manual link button */
+        .redirect-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(0, 255, 0, 0.1);
+            border: 1px solid #00ff00;
+            color: #00ff00;
+            padding: 12px 24px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-radius: 4px;
+            transition: all 0.25s ease;
+            box-shadow: 0 0 12px rgba(0, 255, 0, 0.2);
+            cursor: pointer;
+        }
+
+        .redirect-btn:hover {
+            background: #00ff00;
+            color: #000000;
+            box-shadow: 0 0 25px #00ff00;
+            transform: translateY(-2px);
+            font-weight: 700;
+        }
+
+        /* Developer credit */
+        .developer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(0, 255, 0, 0.2);
+            font-size: 0.85rem;
+            color: rgba(0, 255, 0, 0.7);
+            letter-spacing: 1px;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2.2rem;
+                letter-spacing: 3px;
+            }
+            .subtitle {
+                font-size: 0.9rem;
+            }
+            .terminal-content {
+                padding: 25px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="matrixCanvas"></canvas>
+    <div class="matrix-bg"></div>
+    <div class="grid-lines"></div>
+    <div class="glitch-particles" id="glitchParticles"></div>
+
+    <div class="container">
+        <div class="terminal-window">
+            <div class="terminal-header">
+                <div class="terminal-dots">
+                    <div class="dot red"></div>
+                    <div class="dot yellow"></div>
+                    <div class="dot green"></div>
+                </div>
+                <div class="terminal-title">MKR://SEC_GATEWAY.V2</div>
+            </div>
+
+            <div class="terminal-content">
+                <div class="logo-container">
+                    <a href="https://mohankrishna06.github.io/CyberNotes/home.html">
+                        <img src="https://raw.githubusercontent.com/mohankrishna06/CyberNotes/main/MKR.png" alt="MKR Logo">
+                    </a>
+                </div>
+
+                <!-- Main heading -->
+                <h1>MKRYPTING..</h1>
+                <p class="subtitle">&gt; INITIALIZING FEED UPLINK...</p>
+
+                <!-- Status messages -->
+                <div class="status-messages">
+                    <div class="status-line">[<span>✓</span>] Handshake complete...</div>
+                    <div class="status-line">[<span>✓</span>] Encrypting session route...</div>
+                    <div class="status-line">[<span>✓</span>] Telemetry pipeline synchronized...</div>
+                    <div class="status-line warning">[<span>!</span>] Rerouting to Medium intelligence hub...</div>
+                </div>
+
+                <!-- 4-Second Progress Bar -->
+                <div class="progress-container">
+                    <div class="progress-bar"></div>
+                </div>
+
+                <!-- Countdown notification -->
+                <p class="countdown-text">
+                    Auto-redirecting to Medium in <span id="timer">4</span>s...
+                </p>
+
+                <!-- Manual bypass button linking to CyberNotes home -->
+                <div>
+                    <a id="manualLink" href="https://mohankrishna06.github.io/CyberNotes/home.html" class="redirect-btn">
+                        <span>[ OPEN CYBERNOTES DIRECTLY ]</span>
+                        <span>&rarr;</span>
+                    </a>
+                </div>
+
+                <p class="developer">- VibeCoded by MKR -</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Automatic destination URL (Medium)
+        const AUTO_REDIRECT_URL = "https://medium.com/@mohankrishnareddy7";
+        let countdownSeconds = 4;
+
+        const timerElement = document.getElementById("timer");
+        const countdownInterval = setInterval(() => {
+            countdownSeconds--;
+            if (countdownSeconds > 0) {
+                timerElement.textContent = countdownSeconds;
+            } else {
+                timerElement.textContent = 0;
+                clearInterval(countdownInterval);
+            }
+        }, 1000);
+
+        // Auto-redirect
+        setTimeout(() => {
+            window.location.href = AUTO_REDIRECT_URL;
+        }, 4000);
+
+        // Matrix Background Rain Effect
+        const canvas = document.getElementById('matrixCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+
+        const chars = '0123456789ABCDEF01';
+        const charArray = chars.split('');
+        const fontSize = 14;
+        let columns = canvas.width / fontSize;
+        let drops = [];
+
+        function initDrops() {
+            columns = canvas.width / fontSize;
+            drops = [];
+            for (let i = 0; i < columns; i++) {
+                drops[i] = Math.random() * -100;
+            }
+        }
+        initDrops();
+
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.font = fontSize + 'px Courier New';
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = charArray[Math.floor(Math.random() * charArray.length)];
+                const x = i * fontSize;
+                const y = drops[i] * fontSize;
+
+                const gradient = ctx.createLinearGradient(x, y - fontSize * 10, x, y);
+                gradient.addColorStop(0, 'rgba(0, 255, 0, 0)');
+                gradient.addColorStop(0.5, 'rgba(0, 255, 0, 0.5)');
+                gradient.addColorStop(1, 'rgba(0, 255, 0, 1)');
+                ctx.fillStyle = gradient;
+
+                ctx.fillText(text, x, y);
+
+                if (y > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+
+        setInterval(drawMatrix, 35);
+
+        window.addEventListener('resize', () => {
+            resizeCanvas();
+            initDrops();
+        });
+
+        // Glitch Particles Generator
+        const glitchContainer = document.getElementById('glitchParticles');
+        for (let i = 0; i < 25; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'glitch-particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 3 + 's';
+            particle.style.animationDuration = (Math.random() * 2 + 2) + 's';
+            glitchContainer.appendChild(particle);
+        }
+    </script>
+</body>
+</html>

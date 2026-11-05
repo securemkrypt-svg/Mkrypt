@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- IMPORTANT: Set the redirect URL and delay (in seconds) here -->
+    <!--<meta http-equiv="refresh" content="url=https://medium.com/@mohankrishnareddy7">-->
+    <meta http-equiv="refresh" content="7; url=https://medium.com/@mohankrishnareddy7">
+    <title>Accessing MKRYPT Feed...</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;700&display=swap');
+
+        body {
+            background-image: url("https://lh5.googleusercontent.com/vWnNKU7omu3TKWhnkRGWWpjxYapI2F19mBwEDO1mCduJ8dxcl9N6woDOZqpm5Ghuyzz9K9toEYEStWh7Xe7H5kkKVZ8d8dnxMRB94zwUqEFz0ix3_qAgW80SB-vGGHDJP8Hqf485Zr3Rlva8R2QBuo5EeJ-gFlpdoP4jWi7WPhRXX6jFGH99iw=w1280");
+            background-color: #0a0a0a; /* Dark background */
+            background-repeat: no-repeat;
+            background-size:cover;
+            color: #00ff41; /* Bright green text */
+            font-family: 'Source Code Pro', monospace;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden; /* Hide scrollbars */
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .container {
+            border: 2px solid #00ff41;
+            padding: 30px 40px;
+            box-shadow: 0 0 15px #00ff41, 0 0 25px #00ff41 inset;
+            background-color: rgba(0, 20, 0, 0.5); /* Slightly transparent dark green */
+            border-radius: 5px;
+            max-width: 600px;
+            width: 90%;
+        }
+
+        h1 {
+            font-size: 1.8em;
+            margin-bottom: 15px;
+            text-shadow: 0 0 5px #00ff41;
+        }
+
+        p {
+            font-size: 1.1em;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .typed-text {
+            display: inline-block; /* Allows cursor to be next to text */
+            white-space: pre-wrap; /* Preserves spaces for typing effect */
+        }
+
+        .cursor {
+            display: inline-block;
+            background-color: #00ff41;
+            margin-left: 3px;
+            width: 10px;
+            animation: blink 1s step-end infinite;
+        }
+
+        @keyframes blink {
+            from, to { background-color: transparent; }
+            50% { background-color: #00ff41; }
+        }
+
+        .progress-bar-container {
+            width: 80%;
+            height: 20px;
+            background-color: #00330d; /* Darker green for progress background */
+            border: 1px solid #00ff41;
+            border-radius: 3px;
+            margin: 20px auto 0;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            width: 0%;
+            height: 100%;
+            background-color: #00ff41; /* Bright green for progress */
+            animation: fillProgress 6s linear forwards 0.5s; /* Duration should be less than meta refresh */
+        }
+
+        @keyframes fillProgress {
+            from { width: 0%; }
+            to { width: 100%; }
+        }
+
+        a {
+            color: #00c0f0; /* A different accent color for links */
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>[SECURE CHANNEL ESTABLISHED]</h1>
+         <h1>MKRYPT</h1>
+        <p><span id="line1" class="typed-text"></span><span class="cursor" id="cursor1"></span></p>
+        <p><span id="line2" class="typed-text"></span><span class="cursor" id="cursor2" style="display:none;"></span></p>
+        <p><span id="line3" class="typed-text"></span><span class="cursor" id="cursor3" style="display:none;"></span></p>
+        <div class="progress-bar-container">
+            <div class="progress-bar"></div>
+        </div>
+    </div>
+
+    <script>
+        const lines = [
+            { el: document.getElementById('line1'), text: "Initializing connection to external intel feed...", cursor: document.getElementById('cursor1') },
+            { el: document.getElementById('line2'), text: "Authenticating credentials... ACCESS GRANTED.", cursor: document.getElementById('cursor2') },
+            { el: document.getElementById('line3'), text: "Redirecting to KRISHNA REDDY's Medium Blog...", cursor: document.getElementById('cursor3') }
+        ];
+        const typingSpeed = 60; // Milliseconds per character
+        let currentLine = 0;
+        let charIndex = 0;
+
+        function type() {
+            if (currentLine < lines.length) {
+                const line = lines[currentLine];
+                if (charIndex < line.text.length) {
+                    line.el.textContent += line.text.charAt(charIndex);
+                    charIndex++;
+                    setTimeout(type, typingSpeed);
+                } else {
+                    // Line finished typing
+                    line.cursor.style.display = 'none'; // Hide cursor for finished line
+                    currentLine++;
+                    charIndex = 0;
+                    if (currentLine < lines.length) {
+                        lines[currentLine].cursor.style.display = 'inline-block'; // Show cursor for next line
+                    }
+                    setTimeout(type, 500); // Pause before next line
+                }
+            }
+        }
+
+        // Hide all cursors initially except the first one
+        for (let i = 1; i < lines.length; i++) {
+            lines[i].cursor.style.display = 'none';
+        }
+
+        // Start typing after a short delay
+        setTimeout(type, 500);
+
+       // Optional: Manual link in case redirect fails or user wants to click early
+        setTimeout(() => {
+             if (document.getElementById('line3').textContent.includes("Blog...")) { // Check if last line is fully typed
+                 const manualLink = document.createElement('p');
+                manualLink.innerHTML = 'If not redirected, <a href="https://medium.com/@mohankrishnareddy7">click here</a>.';
+                document.querySelector('.container').appendChild(manualLink);
+             }
+         }, 6500); // Display slightly before meta refresh
+
+    </script>
+</body>
+</html>
